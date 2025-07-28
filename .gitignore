@@ -1,0 +1,76 @@
+# .gitignore
+
+# ---------------------------------
+# Django (back-end 폴더)
+# ---------------------------------
+
+# 가상환경 폴더
+/back-end/venv/
+/back-end/env/
+/back-end/.venv/
+
+# 파이썬 캐시 파일
+/back-end/__pycache__/
+/back-end/*.pyc
+
+# 개발용 데이터베이스 파일 (중요!)
+/back-end/db.sqlite3
+/back-end/*.sqlite3
+
+# 민감 정보를 담는 환경변수 파일 (매우 중요!)
+/back-end/.env
+
+# Django가 수집하는 정적 파일
+/back-end/staticfiles/
+/back-end/static_root/
+
+# 사용자가 업로드하는 미디어 파일
+/back-end/media/
+/back-end/media_root/
+
+# 로그 파일
+/back-end/*.log
+
+
+# ---------------------------------
+# React (front-end 폴더)
+# ---------------------------------
+
+# 의존성 라이브러리 폴더 (매우 중요!)
+/front-end/node_modules/
+
+# 빌드 결과물
+/front-end/build/
+/front-end/dist/
+
+# 민감 정보를 담는 환경변수 파일 (매우 중요!)
+/front-end/.env
+/front-end/.env.local
+/front-end/.env.development
+/front-end/.env.test
+/front-end/.env.production
+
+# 로그 및 디버그 파일
+/front-end/npm-debug.log*
+/front-end/yarn-debug.log*
+/front-end/yarn-error.log*
+
+# 테스트 커버리지 폴더
+/front-end/coverage/
+
+
+# ---------------------------------
+# 공통 / OS / IDE
+# ---------------------------------
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# IDE (JetBrains 등)
+.idea/
