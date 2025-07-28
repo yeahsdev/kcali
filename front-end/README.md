@@ -88,43 +88,42 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ---
 
-## 📊 대시보드 API (Dashboard API)
+## 🍔 음식 및 식단 기록 API (Food & Log API)
 
-### 1. 일일 대시보드 데이터 조회
+### 1. 특정 날짜의 식단 기록 조회
 
-로그인한 사용자의 오늘 날짜 기준 섭취/목표 칼로리 및 음식 기록을 조회합니다.
+로그인한 사용자의 특정 날짜 기준 섭취 칼로리 및 음식 기록을 조회합니다.
 
 * **Method:** `GET`
-* **Endpoint:** `/api/v1/dashboard/today/`
+* **Endpoint:** `/api/v1/foods/logs/{YYYY}/{MM}/{DD}/`
+* **URL Parameters:**
+    * `YYYY`: 년도 (예: 2025)
+    * `MM`: 월 (예: 07)
+    * `DD`: 일 (예: 28)
 * **Authentication:** **Required (JWT)**
 * **Success Response (200 OK):**
 
     ```json
     {
+      "date": "2025-07-28",
       "goal_kcal": 2000,
       "consumed_kcal": 360,
       "food_logs": [
         {
           "id": 1,
           "name": "계란 후라이",
-          "kcal": 180,
-          "time": "아침"
+          "kcal": 180
         },
         {
           "id": 2,
           "name": "닭가슴살 샐러드",
-          "kcal": 180,
-          "time": "점심"
+          "kcal": 180
         }
       ]
     }
     ```
 
----
-
-## 🍔 음식 API (Food API)
-
-### 1. 음식 사진 분석 및 기록
+### 2. 음식 사진 분석 및 기록
 
 사용자가 업로드한 음식 사진을 분석하고, 식단 기록에 추가합니다.
 
