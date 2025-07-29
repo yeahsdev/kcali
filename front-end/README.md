@@ -61,31 +61,7 @@ If you are developing a production application, we recommend using TypeScript wi
     }
     ```
 
-### 2. 로그인 (JWT 토큰 발급)
-
-사용자 인증 후, API 접근을 위한 Access Token과 Refresh Token을 발급합니다.
-
-* **Method:** `POST`
-* **Endpoint:** `/api/v1/users/login/`
-* **Request Body:**
-
-    ```json
-    {
-      "email": "user@example.com",
-      "password": "password123"
-    }
-    ```
-
-* **Success Response (200 OK):**
-
-    ```json
-    {
-      "message": "로그인 성공",
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-      "refresh_token": "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG..."
-    }
-    ```
-
+### 2. 로그인 
 ---
 
 ## 🍔 음식 및 식단 기록 API (Food & Log API)
