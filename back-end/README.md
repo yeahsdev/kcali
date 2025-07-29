@@ -309,3 +309,154 @@ const response = await fetch('http://localhost:8000/api/v1/foods/analyze/', {
   lsof -i :8000
   # 또는 다른 포트로 실행
   python -c "import uvicorn; from main import app; uvicorn.run(app, host='0.0.0.0', port=8001)"
+
+  ---
+  # Swagger UI로 API 테스트하는 방법 (처음부터 끝까지)
+
+  1. 서버 실행하기
+
+  터미널에서:
+  cd /Users/baejaemyeong/Desktop/coding/INTEL-APP/kcali_2025-07-28/kcali/back-end
+  python main.py
+
+  서버가 실행되면 이런 메시지가 나옵니다:
+  INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+  2. Swagger UI 접속
+
+  브라우저에서:
+  http://localhost:8000/docs
+
+  3. 회원가입하기
+
+  3-1. 회원가입 API 찾기
+
+  - POST /api/v1/users/signup/ 섹션을 찾습니다
+  - 초록색 "POST" 버튼을 클릭합니다
+
+  3-2. 회원가입 실행
+
+  1. "Try it out" 버튼 클릭
+  2. Request body에 다음 내용 입력:
+  {
+    "email": "test@example.com",
+    "password": "test123",
+    "password_check": "test123",
+    "gender": "male",
+    "age": 25,
+    "height": 175,
+    "weight": 70
+  }
+  3. "Execute" 버튼 클릭
+  4. 응답 확인:
+  {
+    "message": "회원가입이 성공적으로 완료되었습니다.",
+    "user": {
+      "email": "test@example.com"
+    }
+  }
+
+  4. 로그인하기
+
+  4-1. 로그인 API 찾기
+
+  - POST /api/v1/users/login/ 섹션을 찾습니다
+  - 초록색 "POST" 버튼을 클릭합니다
+
+  4-2. 로그인 실행
+
+  1. "Try it out" 버튼 클릭
+  2. Request body에 다음 내용 입력:
+  {
+    "email": "test@example.com",
+    "password": "test123"
+  }
+  3. "Execute" 버튼 클릭
+  4. 응답에서 user_id 값을 복사해둡니다:
+  {
+    "message": "로그인 성공",
+    "user_id": 1
+  }
+  4. → user_id: 1 이 값을 기억해두세요!
+
+  5. 식단 기록 조회하기
+
+  5-1. 식단 조회 API 찾기
+
+  - GET /api/v1/foods/logs/{year}/{month}/{day}/ 섹션을 찾습니다
+  - 파란색 "GET" 버튼을 클릭합니다
+
+  5-2. 인증 정보 입력
+
+  1. "Try it out" 버튼 클릭
+  2. Parameters 섹션에서:
+    - year: 2025
+    - month: 7
+    - day: 29
+    - user_id (query): 1 (로그인에서 받은 user_id)
+    - 또는 x-user-id (header): 1 (둘 중 하나만 입력)
+
+  5-3. 실행
+
+  1. "Execute" 버튼 클릭
+  2. 응답 확인:
+  {
+    "date": "2025-07-29",
+    "goal_kcal": 2000,
+    "consumed_kcal": 0,
+    "food_logs": []
+  }
+
+  6. 음식 사진 분석하기
+
+  6-1. 음식 분석 API 찾기
+
+  - POST /api/v1/foods/analyze/ 섹션을 찾습니다
+  - 초록색 "POST" 버튼을 클릭합니다
+
+  6-2. 이미지 업로드
+
+  1. "Try it out" 버튼 클릭
+  2. Parameters 섹션에서:
+    - user_id (query): 1 (로그인에서 받은 user_id)
+    - 또는 x-user-id (header): 1
+  3. Request body 섹션에서:
+    - image: "Choose File" 버튼을 클릭해서 음식 사진 선택
+
+  6-3. 실행
+
+  1. "Execute" 버튼 클릭
+  2. 응답 확인:
+  {
+    "message": "성공적으로 기록되었습니다.",
+    "added_food": {
+      "name": "pizza",
+      "kcal": 285
+    },
+    "updated_consumed_kcal": 285
+  }
+
+  7. 다시 식단 조회하기
+
+  음식을 추가한 후 다시 5번 과정을 반복하면:
+  {
+    "date": "2025-07-29",
+    "goal_kcal": 2000,
+    "consumed_kcal": 285,
+    "food_logs": [
+      {
+        "id": 1,
+        "name": "pizza",
+        "kcal": 285
+      }
+    ]
+  }
+
+  💡 주요 팁
+
+  1. user_id는 꼭 기억하세요 - 로그인 후 받은 숫자
+  2. query 또는 header 둘 중 하나만 user_id 입력
+  3. 이미지는 음식 사진이어야 AI가 인식 가능
+  4. 각 단계마다 응답 코드가 200이나 201이면 성공
+
+  이 순서대로 하면 모든 API를 Swagger UI에서 테스트할 수 있습니다!
