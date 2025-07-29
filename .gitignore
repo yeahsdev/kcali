@@ -1,49 +1,31 @@
-# .gitignore
+# ----------------------------------------------------------------
+# Python / Backend (in back-end/)
+# ----------------------------------------------------------------
 
-# ---------------------------------
-# Django (back-end 폴더)
-# ---------------------------------
-
-# 가상환경 폴더
-/back-end/venv/
-/back-end/env/
+# 가상환경 폴더 (루트 또는 back-end 디렉토리 내 위치)
+/.venv/
 /back-end/.venv/
 
-# 파이썬 캐시 파일
-/back-end/__pycache__/
-/back-end/*.pyc
-/back-end/ai/__pycache__/
-/back-end/ai/*.pyc
-/back-end/models/__pycache__/
-/back-end/models/*.pyc
-/back-end/routers/__pycache__/
-/back-end/routers/*.pyc
-/back-end/routers/v1/__pycache__/
-/back-end/routers/v1/*.pyc
-/back-end/schemas/__pycache__/
-/back-end/schemas/*.pyc
-/back-end/service/__pycache__/
-/back-end/service/*.pyc
-/back-end/utils/__pycache__/
-/back-end/utils/*.pyc
-
-# 개발용 데이터베이스 파일 (중요!)
-/back-end/db.sqlite3
-/back-end/*.sqlite3
-
-# 민감 정보를 담는 환경변수 파일 (매우 중요!)
+# 민감한 정보를 담는 환경변수 파일
 /back-end/.env
 
-# Django가 수집하는 정적 파일
-/back-end/staticfiles/
-/back-end/static_root/
+# Python 캐시 파일 및 컴파일된 파일
+# 이 규칙들은 하위 디렉토리까지 모두 적용됩니다.
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# 사용자가 업로드하는 미디어 파일
-/back-end/media/
-/back-end/media_root/
+# 패키지 빌드 및 배포 폴더
+/back-end/build/
+/back-end/dist/
+/back-end/*.egg-info/
+/back-end/*.egg
 
-# 로그 파일
-/back-end/*.log
+# 테스트 관련 파일
+/back-end/.pytest_cache/
+/back-end/.coverage
+/back-end/htmlcov/
 
 
 # ---------------------------------
