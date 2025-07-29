@@ -1,0 +1,1 @@
+# Food_records 테이블 모델

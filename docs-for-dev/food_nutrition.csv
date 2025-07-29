@@ -1,0 +1,35 @@
+food,serving_size,calories_kcal,protein_g,fat_g,carbs_g
+apple_pie,1 slice (125 g),296,2.5,14.0,41.0
+Baked Potato,1 medium (173 g),161,4.3,0.2,36.6
+burger,1 sandwich (215 g),540,29.0,30.0,40.0
+butter_naan,1 naan (90 g),320,8.0,10.0,48.0
+chai,1 cup (240 ml),120,3.0,4.0,18.0
+chapati,1 chapati (40 g),120,3.4,3.0,19.0
+cheesecake,1 slice (125 g),430,6.0,30.0,32.0
+chicken_curry,1 cup (200 g),270,25.0,15.0,8.0
+chole_bhature,1 plate (250 g),450,13.0,15.0,65.0
+Crispy Chicken,2 pieces (150 g),380,28.0,22.0,16.0
+dal_makhani,1 cup (200 g),300,15.0,14.0,32.0
+dhokla,100 g,160,6.0,6.0,22.0
+Donut,1 medium (60 g),240,4.0,11.0,31.0
+fried_rice,1 cup (200 g),330,7.0,11.0,45.0
+Fries,medium (117 g),365,4.0,17.0,48.0
+Hot Dog,with bun (120 g),290,10.0,16.0,24.0
+ice_cream,1/2 cup (66 g),137,2.3,7.3,16.0
+idli,2 pieces (100 g),104,3.0,1.0,22.0
+jalebi,50 g,180,1.0,8.0,25.0
+kaathi_rolls,1 roll (180 g),350,16.0,18.0,34.0
+kadai_paneer,1 cup (200 g),350,16.0,28.0,12.0
+kulfi,1 stick (80 g),190,6.0,11.0,20.0
+masala_dosa,1 dosa (150 g),265,7.0,10.0,35.0
+momos,6 pieces (150 g),210,8.0,6.0,30.0
+omelette,2 eggs (100 g),154,11.0,11.0,1.0
+paani_puri,6 puris (100 g),220,4.0,8.0,32.0
+pakode,100 g,283,6.0,17.0,26.0
+pav_bhaji,1 plate (300 g),410,12.0,20.0,45.0
+pizza,1 slice (107 g),285,12.0,10.0,36.0
+samosa,1 piece (85 g),260,6.0,13.0,31.0
+Sandwich,1 sandwich (200 g),320,14.0,12.0,36.0
+sushi,6 pieces (200 g),240,12.0,3.0,45.0
+Taco,1 taco (170 g),226,9.0,14.0,16.0
+Taquito,2 pieces (100 g),230,7.0,13.0,20.0
