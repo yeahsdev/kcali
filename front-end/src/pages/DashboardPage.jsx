@@ -74,7 +74,10 @@ function DashboardPage() {
   const consumedKcal = data ? data.consumed_kcal : 0;
   const goalKcal = data ? data.goal_kcal : 2000;
   const foodLogs = data ? data.meals : [];
-  const remainingKcal = goalKcal - consumedKcal;
+  let remainingKcal = goalKcal - consumedKcal;
+  if (isNaN(remainingKcal)) {
+    remainingKcal = 0;
+  }
 
   return (
     <div className={styles.container}>
