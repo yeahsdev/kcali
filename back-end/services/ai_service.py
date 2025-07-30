@@ -1,9 +1,10 @@
 # AI 모델 연동 서비스
 import torch
 import torch.nn as nn
-from torchvision import transforms
+from torchvision import transforms, models
 from PIL import Image
 import io
+import json
 import logging
 from typing import Dict, Optional
 from sqlalchemy.orm import Session
@@ -13,39 +14,73 @@ from config.settings import AI_MODEL_PATH
 
 logger = logging.getLogger(__name__)
 
-# 음식 클래스 목록 (모델이 인식할 수 있는 음식들)
-FOOD_CLASSES = [
-    "apple_pie", "Baked Potato", "burger", "butter_naan", "chai",
-    "chapati", "cheesecake", "chicken_curry", "chole_bhature",
-    "Crispy Chicken", "dal_makhani", "dhokla", "Donut", "fried_rice",
-    "Fries", "Hot Dog", "ice_cream", "idli", "jalebi"
-]
+# 클래스 매핑 로드
+def load_class_mapping():
+    """class_mapping.json 파일에서 클래스 매핑을 로드합니다."""
+    mapping_path = Path(__file__).parent.parent.parent / "class_mapping.json"
+    try:
+        with open(mapping_path, 'r', encoding='utf-8') as f:
+            mapping = json.load(f)
+        return mapping['idx_to_class'], list(mapping['class_to_idx'].keys())
+    except Exception as e:
+        logger.error(f"클래스 매핑 로드 실패: {str(e)}")
+        # 폴백: 기본 클래스 목록 사용
+        default_classes = [
+            "apple_pie", "baked_potato", "burger", "butter_naan", "chai",
+            "chapati", "cheesecake", "chicken_curry", "chole_bhature",
+            "crispy_chicken", "dal_makhani", "dhokla", "donut", "fried_rice",
+            "fries", "hot_dog", "ice_cream", "idli", "jalebi"
+        ]
+        idx_to_class = {str(i): cls for i, cls in enumerate(default_classes)}
+        return idx_to_class, default_classes
 
-# 모델 아키텍처 정의 (실제 모델과 동일해야 함)
-class FoodClassifier(nn.Module):
-    def __init__(self, num_classes=len(FOOD_CLASSES)):
-        super(FoodClassifier, self).__init__()
-        # ResNet18 기반 모델 가정
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
-            # 간단한 구조로 가정
-        )
-        self.classifier = nn.Sequential(
-            nn.Dropout(0.5),
-            nn.Linear(64 * 56 * 56, 512),
-            nn.ReLU(inplace=True),
-            nn.Dropout(0.5),
-            nn.Linear(512, num_classes)
-        )
-    
-    def forward(self, x):
-        x = self.features(x)
-        x = torch.flatten(x, 1)
-        x = self.classifier(x)
-        return x
+idx_to_class, FOOD_CLASSES = load_class_mapping()
+
+# 모델 클래스명을 DB 음식명으로 매핑
+MODEL_TO_DB_MAPPING = {
+    "apple_pie": "apple_pie",
+    "baked_potato": "Baked Potato",
+    "burger": "burger",
+    "butter_naan": "butter_naan",
+    "chai": "chai",
+    "chapati": "chapati",
+    "cheesecake": "cheesecake",
+    "chicken_curry": "chicken_curry",
+    "chole_bhature": "chole_bhature",
+    "crispy_chicken": "Crispy Chicken",
+    "dal_makhani": "dal_makhani",
+    "dhokla": "dhokla",
+    "donut": "Donut",
+    "fried_rice": "fried_rice",
+    "fries": "Fries",
+    "hot_dog": "Hot Dog",
+    "ice_cream": "ice_cream",
+    "idli": "idli",
+    "jalebi": "jalebi",
+    "kaathi_rolls": "kaathi_rolls",
+    "kadai_paneer": "kadai_paneer",
+    "kulfi": "kulfi",
+    "masala_dosa": "masala_dosa",
+    "momos": "momos",
+    "omelette": "omelette",
+    "paani_puri": "paani_puri",
+    "pakode": "pakode",
+    "pav_bhaji": "pav_bhaji",
+    "pizza": "pizza",
+    "samosa": "samosa",
+    "sandwich": "sandwich",
+    "sushi": "sushi",
+    "taco": "taco",
+    "taquito": "taquito"
+}
+
+# ResNet18 모델 로드 함수
+def load_resnet_model(num_classes):
+    """사전 학습된 ResNet18 모델을 로드하고 마지막 층을 수정합니다."""
+    model = models.resnet18(pretrained=False)
+    num_features = model.fc.in_features
+    model.fc = nn.Linear(num_features, num_classes)
+    return model
 
 # 전역 변수로 모델 저장
 model = None
@@ -60,10 +95,10 @@ def load_model():
     
     try:
         # 모델 경로
-        model_path = Path(__file__).parent.parent / AI_MODEL_PATH
+        model_path = Path(__file__).parent.parent.parent / AI_MODEL_PATH
         
-        # 모델 초기화
-        model = FoodClassifier(num_classes=len(FOOD_CLASSES))
+        # ResNet18 모델 초기화
+        model = load_resnet_model(num_classes=len(FOOD_CLASSES))
         
         # CPU에서 실행
         device = torch.device("cpu")
@@ -73,14 +108,16 @@ def load_model():
             model.load_state_dict(torch.load(model_path, map_location=device))
             logger.info(f"모델을 성공적으로 로드했습니다: {model_path}")
         else:
-            logger.warning(f"모델 파일을 찾을 수 없습니다: {model_path}. 랜덤 가중치를 사용합니다.")
+            logger.error(f"모델 파일을 찾을 수 없습니다: {model_path}")
+            raise FileNotFoundError(f"모델 파일이 없습니다: {model_path}")
         
         model.to(device)
         model.eval()
         
-        # 이미지 전처리 transform 정의
+        # 이미지 전처리 transform 정의 (predict.py와 동일하게)
         transform = transforms.Compose([
-            transforms.Resize((224, 224)),
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
@@ -112,9 +149,12 @@ async def recognize_food(image_data: bytes, db: Session) -> Optional[Dict]:
             probabilities = torch.nn.functional.softmax(outputs, dim=1)
             confidence, predicted_idx = torch.max(probabilities, 1)
         
-        # 예측된 음식 클래스
-        predicted_food = FOOD_CLASSES[predicted_idx.item()]
+        # 예측된 음식 클래스 (인덱스를 문자열로 변환)
+        predicted_class_name = idx_to_class[str(predicted_idx.item())]
         confidence_score = confidence.item()
+        
+        # DB 음식명으로 매핑
+        predicted_food = MODEL_TO_DB_MAPPING.get(predicted_class_name, predicted_class_name)
         
         # 데이터베이스에서 음식 정보 조회
         food_item = db.query(Food).filter(Food.food == predicted_food).first()
@@ -150,7 +190,8 @@ async def recognize_food(image_data: bytes, db: Session) -> Optional[Dict]:
     except Exception as e:
         logger.error(f"음식 인식 중 오류 발생: {str(e)}")
         # 오류 발생 시 폴백으로 첫 번째 음식 반환
-        fallback_food = FOOD_CLASSES[0]
+        fallback_class = FOOD_CLASSES[0]
+        fallback_food = MODEL_TO_DB_MAPPING.get(fallback_class, fallback_class)
         food_item = db.query(Food).filter(Food.food == fallback_food).first()
         
         if food_item:
