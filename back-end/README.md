@@ -22,17 +22,7 @@ pip install -r requirements.txt
 
 ### 2. 데이터베이스 설정
 
-```bash
-# MySQL 데이터베이스 생성
-mysql -u root -p
-CREATE DATABASE food_calorie_tracker;
-exit
 
-# 테이블 생성 (자동으로 생성됨)
-# 서버 실행 시 SQLAlchemy가 자동으로 테이블 생성
-
-# 음식 데이터 초기화
-python init_food_data.py
 ```
 
 ### 3. AI 모델 설정
