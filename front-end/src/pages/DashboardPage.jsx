@@ -13,7 +13,9 @@ function DashboardPage() {
     // 데이터 로딩 중 상태를 다시 활성화 (업로드 후 새로고침 시)
     setLoading(true);
     try {
-      const response = await apiClient.get('/v1/dashboard/today/');
+      const userId = localStorage.getItem('user_id'); // 로그인 시 저장된 user_id
+      console.log(userId);
+      const response = await apiClient.get(`/v1/dashboard/today?user_id=${userId}`);
       setData(response.data);
     } catch (error) {
       console.error("데이터 로딩 실패", error);
@@ -71,7 +73,7 @@ function DashboardPage() {
 
   const consumedKcal = data ? data.consumed_kcal : 0;
   const goalKcal = data ? data.goal_kcal : 2000;
-  const foodLogs = data ? data.food_logs : [];
+  const foodLogs = data ? data.meals : [];
   const remainingKcal = goalKcal - consumedKcal;
 
   return (

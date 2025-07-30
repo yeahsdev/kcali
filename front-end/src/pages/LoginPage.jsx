@@ -16,7 +16,9 @@ function LoginPage() {
     try {
       const response = await apiClient.post('/v1/users/login/', formData);
       // 'user_id' 대신 'access_token'을 저장합니다. (원래 방식)
-      localStorage.setItem('accessToken', response.data.access_token);
+      const { access_token, user_id } = response.data;
+      localStorage.setItem('user_id', user_id);
+      localStorage.setItem('access_token', access_token);
       alert('로그인 성공!');
       navigate('/dashboard');
     } catch (error) {
