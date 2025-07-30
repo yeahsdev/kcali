@@ -13,16 +13,16 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-# 라우터 임포트 (나중에 추가할 예정)
-# from api import auth, food, dashboard
-# from database.connection import engine, Base
+# 라우터 임포트
+from api import auth, food, dashboard
+from database.connection import engine, Base
 # 앱 생명주기 관리
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # 시작 시 실행
     logger.info("Starting up the application...")
-    # 데이터베이스 테이블 생성 (나중에 추가)
-    # Base.metadata.create_all(bind=engine)
+    # 데이터베이스 테이블 생성
+    Base.metadata.create_all(bind=engine)
     yield
     # 종료 시 실행
     logger.info("Shutting down the application...")
@@ -70,10 +70,10 @@ async def health_check():
         "status": "healthy",
         "database": "connected"  # 나중에 실제 DB 연결 체크로 변경
     }
-# API 라우터 등록 (나중에 추가)
-# app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
-# app.include_router(food.router, prefix="/api/food", tags=["Food"])
-# app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
+# API 라우터 등록
+app.include_router(auth.router, prefix="/api", tags=["Authentication"])
+app.include_router(food.router, prefix="/api", tags=["Food"])
+app.include_router(dashboard.router, prefix="/api", tags=["Dashboard"])
 # 개발 서버 실행을 위한 코드
 if __name__ == "__main__":
     import uvicorn

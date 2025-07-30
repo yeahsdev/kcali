@@ -144,3 +144,6 @@ BEGIN
 END//
 
 DELIMITER ;
+
+DROP TRIGGER IF EXISTS before_food_record_insert;
+DROP PROCEDURE IF EXISTS register_user;
