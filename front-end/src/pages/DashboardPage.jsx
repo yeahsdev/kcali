@@ -101,6 +101,9 @@ function DashboardPage() {
     const consumedKcal = data ? data.consumed_calories : 0;
     const goalKcal = data ? data.daily_target_calories : 2000;
     const foodLogs = data ? data.meals : [];
+    // 프로그레스 바의 진행률을 계산 (0% ~ 100%)
+    const progressPercentage = goalKcal > 0 ? Math.min((consumedKcal / goalKcal) * 100, 100) : 0;
+
     let remainingKcal = goalKcal - consumedKcal;
     if (isNaN(remainingKcal)) {
     remainingKcal = 0;
@@ -128,6 +131,17 @@ function DashboardPage() {
           <span>섭취: {consumedKcal}</span>
           <span className={styles.goal}>/ 목표: {goalKcal} kcal</span>
         </section>
+
+        {/* ===== 👇 여기에 프로그레스 바 섹션을 추가합니다 ===== */}
+        <section className={styles.progressContainer}>
+          <div className={styles.progressBar}>
+            <div 
+              className={styles.progress} 
+              style={{ width: `${progressPercentage}%` }}
+            ></div>
+          </div>
+        </section>
+        {/* ============================================== */}
 
         <section className={styles.statusMessage}>
           {remainingKcal >= 0 ? (
