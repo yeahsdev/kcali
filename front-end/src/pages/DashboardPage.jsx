@@ -6,14 +6,27 @@ function DashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 목업과 같은 디자인을 보기 위한 임시 데이터
+  // 실제 API 연동 시에는 이 부분을 삭제하세요.
+  const mockData = {
+    consumed_kcal: 360,
+    goal_kcal: 2000,
+    food_logs: [
+      { id: 1, name: '계란 후라이', kcal: 180 },
+      { id: 2, name: '닭가슴살 샐러드', kcal: 180 },
+    ],
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 쿼리 파라미터로 user_id를 보내는 로직을 삭제하고,
-        // 원래의 깔끔한 API 호출 방식으로 되돌립니다.
-        // 토큰은 apiClient가 헤더에 자동으로 넣어줍니다.
+        // 실제 API를 사용할 때는 아래 주석을 해제하세요.
         const response = await apiClient.get('/v1/dashboard/today/');
         setData(response.data);
+        
+        // 임시 목업 데이터 사용
+        //setData(mockData);
+
       } catch (error) {
         console.error("데이터 로딩 실패", error);
       } finally {
@@ -23,42 +36,50 @@ function DashboardPage() {
     fetchData();
   }, []);
 
-  if (loading) return <div className={styles.message}>로딩 중...</div>;
-  if (!data) return <div className={styles.message}>데이터를 불러올 수 없습니다.</div>;
-
-  const consumedPercent = (data.consumed_kcal / data.goal_kcal) * 100;
+  if (loading) return <div className={styles.loadingMessage}>로딩 중...</div>;
+  
+  // 데이터가 없을 때의 기본값 설정
+  const consumedKcal = data ? data.consumed_kcal : 0;
+  const goalKcal = data ? data.goal_kcal : 2000;
+  const foodLogs = data ? data.food_logs : [];
+  const remainingKcal = goalKcal - consumedKcal;
 
   return (
     <div className={styles.container}>
-      <div className={styles.dashboard}>
-        <header className={styles.header}>
-          <h2>오늘의 식단</h2>
-        </header>
-        
-        <section className={styles.summaryCard}>
-          <div className={styles.calorieInfo}>
-            <span className={styles.consumed}>{data.consumed_kcal}</span>
-            <span className={styles.goal}>/ {data.goal_kcal} kcal</span>
-          </div>
-          <div className={styles.progressBar}>
-            <div className={styles.progress} style={{ width: `${consumedPercent}%` }}></div>
-          </div>
+      <header className={styles.header}>
+        <h1>Kcali</h1>
+        <p className={styles.slogan}>사진 한 장으로 간편하게 시작하는<br/>나만의 식단 관리</p>
+      </header>
+
+      <main className={styles.mainContent}>
+        <section className={styles.summary}>
+          <span>섭취: {consumedKcal}</span>
+          <span className={styles.goal}>/ 목표: {goalKcal} kcal</span>
+        </section>
+
+        <section className={styles.statusMessage}>
+          {remainingKcal >= 0 ? (
+            <p>“오늘 <span className={styles.highlight}>{remainingKcal}</span> 칼로리 더 드실 수 있어요!”</p>
+          ) : (
+            <p className={styles.warning}>“오늘 더이상 드시면 안돼요!”</p>
+          )}
         </section>
 
         <section className={styles.logSection}>
-          <h3>오늘 먹은 음식</h3>
+          <h2>⬇️ 오늘 먹은 음식</h2>
           <ul className={styles.logList}>
-            {data.food_logs.map(log => (
-              <li key={log.id} className={styles.logItem}>
-                <span>{log.name}</span>
-                <span>{log.kcal} kcal</span>
-              </li>
-            ))}
+            {foodLogs.length > 0 ? (
+              foodLogs.map(log => (
+                <li key={log.id}>- {log.name} ({log.kcal} kcal)</li>
+              ))
+            ) : (
+              <li>오늘 먹은 음식이 없습니다.</li>
+            )}
           </ul>
         </section>
+      </main>
 
-        <button className={styles.addButton}>+</button>
-      </div>
+      <button className={styles.addButton}>+</button>
     </div>
   );
 }
