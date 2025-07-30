@@ -4,6 +4,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 // 우리가 만들 페이지 컴포넌트들을 import 합니다.
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
+import SignupPage from './pages/SignupPage'; // 👈 1. 이 줄을 추가하세요.
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<h2>Home Page</h2>} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} /> 
         <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </div>
