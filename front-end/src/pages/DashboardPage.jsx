@@ -103,13 +103,14 @@ function DashboardPage() {
 
   if (loading) return <div className={styles.loadingMessage}>로딩 중...</div>;
 
-  const consumedKcal = data ? data.consumed_kcal : 0;
-  const goalKcal = data ? data.goal_kcal : 2000;
-  const foodLogs = data ? data.meals : [];
-  let remainingKcal = goalKcal - consumedKcal;
-  if (isNaN(remainingKcal)) {
+  // DashboardPage.jsx 파일의 return 문 바로 위
+    const consumedKcal = data ? data.consumed_calories : 0;
+    const goalKcal = data ? data.daily_target_calories : 2000;
+    const foodLogs = data ? data.meals : [];
+    let remainingKcal = goalKcal - consumedKcal;
+    if (isNaN(remainingKcal)) {
     remainingKcal = 0;
-  }
+    }
 
   return (
     <div className={styles.container}>
