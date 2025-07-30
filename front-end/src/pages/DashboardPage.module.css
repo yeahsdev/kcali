@@ -1,120 +1,106 @@
+/* 기본 폰트 및 배경 설정 */
 .container {
-  display: flex;
-  justify-content: center;
-  padding-top: 50px;
-  background-color: #f0f2f5;
+  background-color: #EFEFEF; /* 이미지와 유사한 배경색 */
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   min-height: 100vh;
-  font-family: sans-serif;
-}
-
-.dashboard {
-  width: 100%;
-  max-width: 400px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  position: relative;
-  height: fit-content;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 2rem;
 }
 
-.summaryCard {
-  background-color: #fafafa;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 30px;
-}
-
-.calorieInfo {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.consumed {
-  font-size: 2.5rem;
+.header h1 {
+  font-size: 2rem;
   font-weight: bold;
-  color: #007bff;
+  margin: 0;
 }
 
-.goal {
-  font-size: 1.2rem;
-  color: #666;
-  margin-left: 5px;
+.slogan {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 0.5rem;
+  line-height: 1.5;
 }
 
-.progressBar {
-  height: 10px;
+.mainContent {
   width: 100%;
-  background-color: #e9ecef;
-  border-radius: 5px;
-  overflow: hidden;
 }
 
-.progress {
-  height: 100%;
-  background-color: #007bff;
-  border-radius: 5px;
-  transition: width 0.5s ease-in-out;
+.summary {
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.logSection h3 {
-  margin-bottom: 15px;
+.summary .goal {
   color: #444;
+}
+
+.statusMessage {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 2.5rem;
+}
+
+.statusMessage .highlight {
+  color: #007AFF; /* 강조 색상 (파란색 계열) */
+  font-weight: bold;
+}
+
+.statusMessage .warning {
+  color: #FF3B30; /* 경고 색상 (빨간색 계열) */
+  font-weight: bold;
+}
+
+.logSection h2 {
+  font-size: 1rem;
+  font-weight: bold;
+  border-bottom: 2px dashed #ccc;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .logList {
   list-style: none;
   padding: 0;
-  margin: 0;
-}
-
-.logItem {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 5px;
-  border-bottom: 1px solid #f0f0f0;
   font-size: 1rem;
+  line-height: 1.8;
 }
 
-.logItem span:first-child {
-  color: #555;
-}
-
-.logItem span:last-child {
-  color: #333;
-  font-weight: bold;
-}
-
+/* 추가 버튼 (Floating Action Button) */
 .addButton {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+  position: fixed; /* 화면에 고정 */
+  bottom: 2rem;    /* 아래에서 2rem */
+  right: 2rem;     /* 오른쪽에서 2rem */
   width: 60px;
   height: 60px;
-  border-radius: 50%;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  font-size: 2rem;
-  font-weight: bold;
+  background-color: white;
+  color: #333;
+  border: 2px solid #333;
+  border-radius: 50%; /* 원형으로 만들기 */
+  font-size: 2.5rem;
+  font-weight: 300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease-in-out;
 }
 
 .addButton:hover {
-  background-color: #0056b3;
+  transform: scale(1.05);
 }
 
-.message {
+.loadingMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   font-size: 1.2rem;
-  color: #555;
-  text-align: center;
-  margin-top: 50px;
 }
