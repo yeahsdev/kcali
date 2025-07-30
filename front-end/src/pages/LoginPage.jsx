@@ -15,9 +15,10 @@ function LoginPage() {
     e.preventDefault();
     try {
       const response = await apiClient.post('/v1/users/login/', formData);
-      // 세션-쿠키 방식에서는 토큰 저장 불필요
+      // 'user_id' 대신 'access_token'을 저장합니다. (원래 방식)
+      localStorage.setItem('accessToken', response.data.access_token);
       alert('로그인 성공!');
-      navigate('/dashboard'); // 성공 시 대시보드 페이지로 이동
+      navigate('/dashboard');
     } catch (error) {
       alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
       console.error(error);
