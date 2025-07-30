@@ -29,19 +29,26 @@ async def upload_food_image(
     try:
         # 이미지 파일 유효성 검사
         await validate_image(file)
-        
+
         # 이미지 데이터 읽기
         image_data = await file.read()
-        
+
         # AI 모델로 음식 인식
         recognition_result = await recognize_food(image_data, db)
+
+        # ==================== 디버깅 코드 1 ====================
+        # AI 서비스가 반환한 딕셔너리 결과를 터미널에 출력합니다.
+        print(f"--- AI 인식 결과 (recognition_result) ---")
+        print(recognition_result)
+        print("----------------------------------------")
+        # =======================================================
         
         if not recognition_result:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="음식을 인식할 수 없습니다."
             )
-        
+
         # 응답 생성
         response = FoodUploadResponse(
             food_name=recognition_result["food_name"],
@@ -51,6 +58,14 @@ async def upload_food_image(
             nutrition=FoodNutrition(**recognition_result["nutrition"]),
             message=f"{recognition_result['food_name']}이(가) {recognition_result['confidence']*100:.1f}% 확률로 인식되었습니다."
         )
+
+        # ==================== 디버깅 코드 2 ====================
+        # 프론트엔드로 보내기 직전의 최종 응답 객체를 JSON 형태로 출력합니다.
+        print(f"--- 최종 응답 객체 (response) ---")
+        # .model_dump_json()을 쓰면 내용을 예쁘게 볼 수 있습니다.
+        print(response.model_dump_json(indent=2)) 
+        print("---------------------------------")
+        # =======================================================
         
         return response
         

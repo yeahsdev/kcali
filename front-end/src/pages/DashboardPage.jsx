@@ -36,35 +36,67 @@ function DashboardPage() {
     fileInputRef.current.click();
   };
 
+// DashboardPage.jsx
+
   // 파일이 선택되었을 때 실행될 핸들러
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    if (!file) {
-      return; // 파일이 선택되지 않았으면 아무것도 안 함
-    }
+    if (!file) return;
 
-    // FormData 객체를 사용하여 파일을 담음
     const formData = new FormData();
-    // 백엔드에서 받을 key 이름을 'image'로 가정합니다.
     formData.append('file', file);
 
     try {
-      alert('이미지를 업로드합니다...');
-      await apiClient.post('/v1/food/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      // ===== 1단계: 이미지 업로드 및 AI로 음식 이름 분석 =====
+      alert('이미지를 분석합니다...');
+      const uploadResponse = await apiClient.post('/v1/food/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       
-      alert('업로드 성공! 데이터를 새로고침합니다.');
-      fetchData(); // 업로드 성공 시 대시보드 데이터를 다시 불러옴
+      const recognizedFoodName = uploadResponse.data.food_name;
+      if (!recognizedFoodName) {
+        throw new Error('AI가 음식 이름을 인식하지 못했습니다.');
+      }
+      
+      // ===== 2단계: 인식된 이름으로 DB에서 음식 정보 검색 (food_id 획득) =====
+      alert(`'${recognizedFoodName}'(으)로 음식을 검색합니다...`);
+      const searchResponse = await apiClient.get(`/v1/food/search?q=${recognizedFoodName}`);
+      
+      if (searchResponse.data.results.length === 0) {
+        throw new Error(`'${recognizedFoodName}'에 해당하는 음식을 DB에서 찾을 수 없습니다.`);
+      }
+
+      // 검색 결과의 첫 번째 항목을 사용
+      const foodData = searchResponse.data.results[0];
+      const foodId = foodData.food_id;
+
+      // ===== 3단계: 획득한 food_id로 최종 식단 기록 =====
+      alert(`'${foodData.food_name}'을(를) 식단에 기록합니다.`);
+      const userId = localStorage.getItem('user_id');
+
+      const recordPayload = {
+        user_id: parseInt(userId, 10),
+        food_id: foodId,
+        serving_amount: 1.0, // 기본 1인분
+      };
+
+      // ==================== 디버깅 코드 추가 ====================
+      console.log('기록 API에 전송할 데이터 (recordPayload):', recordPayload);
+      // =======================================================
+
+
+      await apiClient.post('/v1/food/record', recordPayload);
+
+      // ===== 4단계: 성공 후 대시보드 새로고침 =====
+      alert('성공적으로 기록되었습니다!');
+      fetchData();
 
     } catch (error) {
-      console.error('이미지 업로드 실패:', error);
-      alert('이미지 업로드에 실패했습니다.');
+      console.error('음식 기록 처리 중 오류 발생:', error);
+      alert(error.message || '음식 기록 과정에서 오류가 발생했습니다.');
     } finally {
-        // 동일한 파일을 다시 선택할 수 있도록 입력 값을 초기화
-        event.target.value = null;
+      // 동일한 파일을 다시 선택할 수 있도록 입력 값을 초기화
+      event.target.value = null;
     }
   };
 
@@ -113,9 +145,13 @@ function DashboardPage() {
         <section className={styles.logSection}>
         <h2>⬇️ 오늘 먹은 음식</h2>
         <ul className={styles.logList}>
-            {foodLogs.length > 0 
-            ? foodLogs.map(log => (
-                <li key={log.id}>- {log.name} ({log.kcal} kcal)</li>
+            {foodLogs && foodLogs.length > 0
+            ? foodLogs.map((log, index) => (
+                // key prop에는 백엔드에서 받은 고유 ID인 'record_id'를 사용합니다.
+                // 백엔드 데이터에 맞춰 'food_name'과 'calories'로 속성 이름을 변경합니다.
+                <li key={log.record_id || index}>
+                    - {log.food_name} ({log.calories} kcal)
+                </li>
                 ))
             : <li>오늘 먹은 음식이 없습니다.</li>
             }
