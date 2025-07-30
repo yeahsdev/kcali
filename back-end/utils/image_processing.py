@@ -26,5 +26,5 @@ async def validate_image(file: UploadFile) -> bool:
             status_code=400,
             detail=f"지원하지 않는 이미지 형식입니다. 지원 형식: {', '.join(ALLOWED_IMAGE_TYPES)}"
         )
-    
+    print("image_processing")
     return True
