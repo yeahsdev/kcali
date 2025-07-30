@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import apiClient from '../api/client';
 import styles from './SignupPage.module.css'; // CSS 모듈 import
+import { Link, useNavigate } from 'react-router-dom'; // Link 추가
 
 function SignupPage() {
+  const navigate = useNavigate(); // ✅ 선언 추가
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -27,6 +29,7 @@ function SignupPage() {
       const response = await apiClient.post('/v1/users/signup/', formData);
       alert(response.data.message);
       // 성공 시 로그인 페이지로 이동
+      navigate('/login'); // ✅ 회원가입 성공 시 로그인 페이지로 이동
     } catch (error) {
       alert('회원가입에 실패했습니다. 입력 정보를 확인해주세요.');
       console.error(error);

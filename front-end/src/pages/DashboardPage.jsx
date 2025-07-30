@@ -9,6 +9,9 @@ function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // 쿼리 파라미터로 user_id를 보내는 로직을 삭제하고,
+        // 원래의 깔끔한 API 호출 방식으로 되돌립니다.
+        // 토큰은 apiClient가 헤더에 자동으로 넣어줍니다.
         const response = await apiClient.get('/v1/dashboard/today/');
         setData(response.data);
       } catch (error) {
