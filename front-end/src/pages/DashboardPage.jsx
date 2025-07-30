@@ -14,7 +14,6 @@ function DashboardPage() {
     setLoading(true);
     try {
       const userId = localStorage.getItem('user_id'); // 로그인 시 저장된 user_id
-      console.log(userId);
       const response = await apiClient.get(`/v1/dashboard/today?user_id=${userId}`);
       setData(response.data);
     } catch (error) {
@@ -79,11 +78,6 @@ function DashboardPage() {
         food_id: foodId,
         serving_amount: 1.0, // 기본 1인분
       };
-
-      // ==================== 디버깅 코드 추가 ====================
-      console.log('기록 API에 전송할 데이터 (recordPayload):', recordPayload);
-      // =======================================================
-
 
       await apiClient.post('/v1/food/record', recordPayload);
 
