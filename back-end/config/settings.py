@@ -16,7 +16,8 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # AI 모델 설정
-AI_MODEL_URL = "http://localhost:8000/predict"
+AI_MODEL_PATH = "best_food_model.pth"  # 모델 파일 경로
+AI_MODEL_URL = "http://localhost:8001/predict"  # 외부 AI 서버 (사용하지 않음)
 AI_MODEL_TIMEOUT = 30
 
 # 업로드 설정
