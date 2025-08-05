@@ -78,18 +78,18 @@ npm run dev
 ```
 
 ### 📁 프로젝트 구조
-kcali/
-├── back-end/           # FastAPI 백엔드 서버
-│   ├── api/            # API 라우터 (엔드포인트)
-│   ├── models/         # SQLAlchemy DB 모델
-│   ├── schemas/        # Pydantic 데이터 검증 스키마
-│   ├── services/       # 비즈니스 로직 (AI, 칼로리 계산 등)
-│   ├── main.py         # FastAPI 앱 실행 파일
-│   └── requirements.txt
-│
-└── front-end/          # React 프론트엔드
-    ├── src/
-    │   ├── api/        # API 클라이언트 (axios)
-    │   ├── pages/      # 페이지 컴포넌트 (로그인, 대시보드 등)
-    │   └── App.jsx     # 메인 라우팅 설정
-    └── package.json
+
+- **`kcali/`**
+  - **`back-end/`**: FastAPI 백엔드 서버
+    - `api/`: API 라우터 (엔드포인트)
+    - `models/`: SQLAlchemy DB 모델
+    - `schemas/`: Pydantic 데이터 검증 스키마
+    - `services/`: 비즈니스 로직 (AI, 칼로리 계산 등)
+    - `main.py`: FastAPI 앱 실행 파일
+    - `requirements.txt`
+  - **`front-end/`**: React 프론트엔드
+    - `src/`:
+      - `api/`: API 클라이언트 (axios)
+      - `pages/`: 페이지 컴포넌트 (로그인, 대시보드 등)
+      - `App.jsx`: 메인 라우팅 설정
+    - `package.json`
