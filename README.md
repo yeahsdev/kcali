@@ -75,6 +75,7 @@ npm install
 npm run dev
 
 애플리케이션이 http://localhost:5173에서 실행됩니다. 브라우저를 열어 접속하세요.
+```
 
 📁 프로젝트 구조
 kcali/
